@@ -1,0 +1,9 @@
+testUseIt/serversettings.py
+apps/*/migrations/
+**/__pycache__/
+*.log
+*.pot
+*.pyc
+*.cpython-36.pyc
+media
+.idea
