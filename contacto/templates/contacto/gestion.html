@@ -47,7 +47,7 @@
                     <td>{{ contacto.nombres }}</td>
                     <td>{{ contacto.apellidos }}</td>
                     <td>{{ contacto.telefono }}</td>
-                    <td>{{ contacto.empresa_cliente }}</td>
+                    <td><a href="/empresas_clientes/detail/{{contacto.empresa_cliente.id}}">{{contacto.empresa_cliente}}</a></td>
                     <td>{{ contacto.propietario }}</td>
                     <td class="col-sm-1 col-lg-2" style="padding: 0">
                         <div class="col-sm-8 col-lg-4" style="padding: 2px">
