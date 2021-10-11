@@ -1,0 +1,86 @@
+{% load static %}
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Log in</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.7 -->
+	<link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="{% static 'bower_components/Ionicons/css/ionicons.min.css' %}">
+	<link rel="stylesheet" href="{% static 'dist/css/estilos.css' %}">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+	<!-- Material Design -->
+	<link rel="stylesheet" href="{% static 'dist/css/bootstrap-material-design.min.css' %}">
+	<link rel="stylesheet" href="{% static 'dist/css/ripples.min.css' %}">
+	<link rel="stylesheet" href="{% static 'dist/css/MaterialAdminLTE.min.css' %}">
+
+	<!-- Google Font -->
+	<link rel="stylesheet"
+	      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition login-page skin-green-light">
+<div class="login-box">
+	
+	<!-- /.login-logo -->
+	<div class="login-box-body">
+		<div class="login-logo">
+			<b>Test</b>
+		</div>
+		<p class="login-box-msg">INICIA SESIÓN</p>
+
+		{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="alert alert-danger">
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% for error in form.non_field_errors %}
+				<div class="alert alert-danger">
+					<strong>{{ error|escape }}</strong>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		<form method="post">{% csrf_token %}
+			<div class="form-group has-feedback">
+				<label class="control-label" for="id_username">Nombre de usuario</label>
+				<input type="text" name="username" class="form-control" required>
+				<span class="glyphicon glyphicon-user form-control-feedback"></span>
+			</div>
+			<div class="form-group has-feedback">
+				<label class="control-label" for="id_password">Contraseña</label>
+				<input type="password" name="password" class="form-control" required>
+				<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+			</div>
+			<div class="row">
+
+				<div class="col-xs-15">
+					<button type="submit" class="btn btn-success btn-raised btn-block btn-flat">Iniciar sesión</button>
+				</div>
+			</div>
+			<div class="row">
+                <div class="col-xs-15 text-center">
+                    <a class="btn btn-primary btn-raised btn-block btn-flat" href="/core/signup/" role="button">Registrarse</a>
+                </div>
+            </div>
+		</form>
+
+	</div>
+	<!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<!-- Material Design -->
+<script>
+    $.material.init();
+</script>
+</body>
+</html>

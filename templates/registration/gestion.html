@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+
+
+{% block titulo %}Gestión de usuarios{% endblock titulo %}
+{% block descripcion_pagina %} Gestiona los usuarios {% endblock descripcion_pagina %}
+{% block miga_pan %}
+<li class="active">GESTIONAR USUARIOS</li>
+{% endblock miga_pan %}
+
+{% block css %}
+
+<link href="{% static 'bower_components/datatables.net-bs/responsive/responsive.dataTables.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+{{ form_empleado.media.css }}
+<style media="screen">
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
+{% endblock css %} 
+ 
+{% block contenido %}
+
+<div class="col-md-12">
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Listado de usuarios</h3>
+        </div>
+        <div class="box-body">
+            <table id="tabla_usuarios" class="table table-striped table-bordered table-responsive" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Nombre de usuario</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Correo electrónico</th>
+                    <th>Último inicio de sesión</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.first_name }}</td>
+                    <td>{{ usuario.last_name }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.last_login }}</td>
+                    <td class="col-sm-1 col-lg-2" style="padding: 0">
+                        <div  class="col-sm-8 col-lg-4" style="padding: 2px">
+                            <a href="detail/{{usuario.id}}" type="submit" class="btn btn-info btn-raised btn-sm btn-block" title="Ver"> <span class="glyphicon glyphicon-eye-open"></span></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock contenido %}
+
+{% block js %}
+
+<script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'bower_components/datatables.net-bs/responsive/dataTables.responsive.min.js' %}"></script>
+
+<script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
+{{ form_empleado.media.js }}
+<script type="text/javascript">
+    $(function () {
+        $('#tabla_usuarios').DataTable({
+            "language": { "url": "{% static 'bower_components/datatables.net/spanish.json' %}" },
+	        "responsive": true
+        })
+    })
+</script>
+
+<script>
+    {% for msg in messages %}
+    $(document).ready(function () {
+        setTimeout(function () {
+            toastr.options = {
+                "closeButtons": true,
+                "progressBar": true,
+                "preventDuplicates": true,
+                "showEasing": "swing",
+                "extendedTimeOut": 5000,
+                "timeOut": 4000
+            }
+            toastr["{{ msg.tags }}"]("{{ msg }}")
+        }, 500);
+    });
+    {% endfor %}
+</script>
+
+{% endblock js %}
