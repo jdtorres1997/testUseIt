@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from empresa.models import Empresa
+from empresa.models import Empresa,UsuariosEmpresa
+from django.db.models import Q
 
 class EmpresaCliente(models.Model):
     nit = models.CharField(verbose_name='NIT',max_length=20)
@@ -21,4 +22,14 @@ class EmpresaCliente(models.Model):
 
     def get_info():
         empresas = EmpresaCliente.objects.order_by('id')
+        return empresas
+
+    def get_empresas_clientes(usuario):
+
+        usuarios_empresa = UsuariosEmpresa.objects.filter(usuario_invitado=usuario).values_list('empresa', flat=True).distinct()
+        empresas = EmpresaCliente.objects.filter(Q(empresa__id__in=usuarios_empresa) | Q(empresa__propietario=usuario)).order_by('id')
+        return empresas
+
+    def get_empresas_clientes_empresa(empresa):
+        empresas = EmpresaCliente.objects.filter(empresa=empresa).order_by('id')
         return empresas

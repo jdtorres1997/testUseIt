@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import EmpresaAddForm, EmpresaEditForm, VinculacionForm
 from django.contrib import messages
 from django.contrib.auth.models import User
+from empresaCliente.models import EmpresaCliente
 
 # Create your views here.
 @login_required
@@ -72,7 +73,8 @@ def detail_empresa(request, id_empresa):
 	empresa = Empresa.objects.get(id=id_empresa)
 	usuario = request.user
 	usuarios_invitados = UsuariosEmpresa.get_usuarios_invitados(empresa)
-	return render(request, 'empresa/detail.html', {'empresa': empresa, 'usuarios_invitados':usuarios_invitados})
+	empresas_clientes = EmpresaCliente.get_empresas_clientes_empresa(empresa)
+	return render(request, 'empresa/detail.html', {'empresa': empresa, 'usuarios_invitados': usuarios_invitados, 'empresas_clientes': empresas_clientes})
 
 @login_required
 def eliminar_usuario(request, id_empresa, id_usuario):

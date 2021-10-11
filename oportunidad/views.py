@@ -3,6 +3,8 @@ from .models import Oportunidad
 from django.contrib.auth.decorators import login_required
 from .forms import OportunidadAddForm, OportunidadEditForm
 from django.contrib import messages
+from empresaCliente.models import EmpresaCliente
+from contacto.models import Contacto
 
 # Create your views here.
 @login_required
@@ -10,11 +12,13 @@ def gestion_oportunidades(request):
 	# Usuario que hizo la peticion a la funcion (usuario que esta en la sesion)
 	usuario = request.user
 	return render(request, 'oportunidad/gestion.html',
-					{'oportunidades': Oportunidad.get_info()})
+					{'oportunidades': Oportunidad.get_oportunidades(usuario)})
 
 @login_required
 def add_oportunidad(request):
 	usuario = request.user
+	empresas_clientes_queryset = EmpresaCliente.get_empresas_clientes(usuario)
+	contactos_queryset = Contacto.get_contactos(usuario)
 	if request.method == 'POST':
 		form = OportunidadAddForm(request.POST)
 		if form.is_valid():
@@ -24,10 +28,14 @@ def add_oportunidad(request):
 			messages.success(request, 'Oportunidad registrada exitosamente')
 			return redirect('oportunidades:gestion')
 		else:
+			form.listarEmpresasclientes(empresas_clientes_queryset)
+			form.listarContactos(contactos_queryset)
 			messages.error(request, 'Por favor corrige los errores')
 			return render(request, 'oportunidad/add.html', {'form': form})
 	else:
 		form = OportunidadAddForm()
+		form.listarEmpresasclientes(empresas_clientes_queryset)
+		form.listarContactos(contactos_queryset)
 		return render(request, 'oportunidad/add.html',
 					{'form': form})
 

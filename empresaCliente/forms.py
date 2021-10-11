@@ -7,6 +7,9 @@ from django import forms
 import re
 
 class EmpresaAddForm(ModelForm): 
+    def listarEmpresas(self, empresas_queryset):
+        self.fields['empresa'].queryset = empresas_queryset
+
     class Meta:
         model = EmpresaCliente
         fields = ('nit', 'nombre', 'nombre_comercial', 'direccion', 'telefono', 'email', 'sitio_web', 'pais', 'estado', 'ciudad','empresa')

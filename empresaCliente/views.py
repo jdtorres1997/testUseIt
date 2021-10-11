@@ -3,6 +3,9 @@ from .models import EmpresaCliente
 from django.contrib.auth.decorators import login_required
 from .forms import EmpresaAddForm, EmpresaEditForm
 from django.contrib import messages
+from contacto.models import Contacto
+from oportunidad.models import Oportunidad
+from empresa.models import Empresa
 
 # Create your views here.
 @login_required
@@ -10,24 +13,27 @@ def gestion_empresas(request):
 	# Usuario que hizo la peticion a la funcion (usuario que esta en la sesion)
 	usuario = request.user
 	return render(request, 'empresa_cliente/gestion.html',
-					{'empresas': EmpresaCliente.get_info()})
+					{'empresas': EmpresaCliente.get_empresas_clientes(usuario)})
 
 @login_required
 def add_empresa(request):
 	usuario = request.user
+	empresas_queryset = Empresa.get_empresas(usuario)
 	if request.method == 'POST':
 		form = EmpresaAddForm(request.POST)
 		if form.is_valid():
-			messages.success(request, 'Empresa registrado exitosamente')
 			empresa = form.save(commit=False)
 			empresa.propietario = usuario
 			empresa.save()
+			messages.success(request, 'Empresa cliente registrada exitosamente')
 			return redirect('empresas_clientes:gestion')
 		else:
+			form.listarEmpresas(empresas_queryset)
 			messages.error(request, 'Por favor corrige los errores')
 			return render(request, 'empresa_cliente/add.html', {'form': form})
 	else:
 		form = EmpresaAddForm()
+		form.listarEmpresas(empresas_queryset)
 		return render(request, 'empresa_cliente/add.html',
 					{'form': form})
 
@@ -39,8 +45,8 @@ def editar_empresa(request, id_empresa):
 	if request.method == 'POST':
 		form = EmpresaEditForm(request.POST, instance=empresa)
 		if form.is_valid():
-			messages.success(request, 'Empresa registrado exitosamente')
 			form.save()
+			messages.success(request, 'Empresa cliente registrada exitosamente')
 			return redirect('empresas_clientes:gestion')
 		else:
 			messages.error(request, 'Por favor corrige los errores')
@@ -59,7 +65,7 @@ def eliminar_empresa(request, id_empresa):
 		if request.method == 'POST':
 			
 			empresa.delete()
-			messages.success(request, 'Has eliminado la empresa exitosamente!')
+			messages.success(request, 'Has eliminado la empresa cliente exitosamente!')
 			return redirect('empresas_clientes:gestion')
 		else:
 			return render(request, 'empresa_cliente/delete.html', {'empresa': empresa})
@@ -71,5 +77,6 @@ def eliminar_empresa(request, id_empresa):
 def detail_empresa(request, id_empresa):
 	empresa = EmpresaCliente.objects.get(id=id_empresa)
 	usuario = request.user
-
-	return render(request, 'empresa_cliente/detail.html', {'empresa': empresa})
+	contactos = Contacto.get_contactos_empresa_cliente(empresa)
+	oportunidades = Oportunidad.get_oportunidades_empresa_cliente(empresa, usuario)
+	return render(request, 'empresa_cliente/detail.html', {'empresa': empresa, 'contactos': contactos, 'oportunidades':oportunidades})

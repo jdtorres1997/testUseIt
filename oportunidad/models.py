@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from empresaCliente.models import EmpresaCliente
 from contacto.models import Contacto
+from empresa.models import Empresa,UsuariosEmpresa
+from django.db.models import Q
 
 ESTADO_CHOICES = (
     ("En proceso", "En proceso"),
@@ -25,6 +27,14 @@ class Oportunidad(models.Model):
 
     def get_info():
         oportunidades = Oportunidad.objects.order_by('id')
+        return oportunidades
+
+    def get_oportunidades(usuario):
+        oportunidades = Oportunidad.objects.filter(Q(propietario=usuario) | Q(empresa_cliente__empresa__propietario=usuario)).order_by('id')
+        return oportunidades
+
+    def get_oportunidades_empresa_cliente(empresa_cliente, usuario):
+        oportunidades = Oportunidad.objects.filter(Q(propietario=usuario) | Q(empresa_cliente__empresa__propietario=usuario)).filter(empresa_cliente=empresa_cliente).order_by('id')
         return oportunidades
 
     def save(self, *args, **kwargs):

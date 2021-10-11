@@ -3,6 +3,7 @@ from .models import Contacto
 from django.contrib.auth.decorators import login_required
 from .forms import ContactoAddForm, ContactoEditForm
 from django.contrib import messages
+from empresaCliente.models import EmpresaCliente
 
 # Create your views here.
 @login_required
@@ -10,11 +11,12 @@ def gestion_contactos(request):
 	# Usuario que hizo la peticion a la funcion (usuario que esta en la sesion)
 	usuario = request.user
 	return render(request, 'contacto/gestion.html',
-					{'contactos': Contacto.get_info()})
+					{'contactos': Contacto.get_contactos(usuario)})
 
 @login_required
 def add_contacto(request):
 	usuario = request.user
+	empresas_clientes_queryset = EmpresaCliente.get_empresas_clientes(usuario)
 	if request.method == 'POST':
 		form = ContactoAddForm(request.POST)
 		if form.is_valid():
@@ -24,10 +26,12 @@ def add_contacto(request):
 			contacto.save()
 			return redirect('contactos:gestion')
 		else:
+			form.listarEmpresasclientes(empresas_clientes_queryset)
 			messages.error(request, 'Por favor corrige los errores')
 			return render(request, 'contacto/add.html', {'form': form})
 	else:
 		form = ContactoAddForm()
+		form.listarEmpresasclientes(empresas_clientes_queryset)
 		return render(request, 'contacto/add.html',
 					{'form': form})
 
@@ -35,7 +39,6 @@ def add_contacto(request):
 def editar_contacto(request, id_contacto):
 	contacto = Contacto.objects.get(id=id_contacto)
 	usuario = request.user
-	print(contacto)
 	if request.method == 'POST':
 		form = ContactoEditForm(request.POST, instance=contacto)
 		if form.is_valid():
