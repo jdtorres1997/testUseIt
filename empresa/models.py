@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Q
+from django.contrib.auth.models import User
 
 class Empresa(models.Model):
     nit = models.CharField(verbose_name='NIT',max_length=20)
@@ -20,3 +22,23 @@ class Empresa(models.Model):
     def get_info():
         empresas = Empresa.objects.order_by('id')
         return empresas
+
+    def get_empresas(usuario):
+        try:
+            usuarios_empresa = UsuariosEmpresa.objects.filter(usuario_invitado=usuario).values_list('empresa', flat=True).distinct()
+            empresas = Empresa.objects.filter(Q(id__in=usuarios_empresa) | Q(propietario=usuario)).order_by('id')
+            return empresas
+        except:
+            return None
+
+class UsuariosEmpresa(models.Model):
+    usuario_invitado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuario')
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, verbose_name='Empresa')
+
+    def get_usuarios_invitados(empresa):
+        try:
+            usuarios_empresa = UsuariosEmpresa.objects.filter(empresa=empresa).values_list('usuario_invitado', flat=True).distinct()
+            usuarios = User.objects.filter(id__in=usuarios_empresa).order_by('id')
+            return usuarios
+        except:
+            return None

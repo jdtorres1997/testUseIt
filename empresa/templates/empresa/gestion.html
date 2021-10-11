@@ -48,12 +48,14 @@
                     <td>{{ empresa.nombre_comercial }}</td>
                     <td>{{ empresa.propietario }}</td>
                     <td class="col-sm-1 col-lg-2" style="padding: 0">
+                        {% if user == empresa.propietario %}
                         <div class="col-sm-8 col-lg-4" style="padding: 2px">
                             <a href="edit/{{empresa.id}}" type="submit" class="btn btn-primary btn-raised btn-sm btn-block" title="Editar"> <span class="glyphicon glyphicon-pencil"></span></a>
                         </div>
                         <div  class="col-sm-8 col-lg-4" style="padding: 2px">
                             <a href="delete/{{empresa.id}}" type="submit" class="btn btn-warning btn-raised btn-sm btn-block" title="Eliminar"> <span class="glyphicon glyphicon-trash"></span></a>
                         </div>
+                        {% endif %}
                         <div  class="col-sm-8 col-lg-4" style="padding: 2px">
                             <a href="detail/{{empresa.id}}" type="submit" class="btn btn-info btn-raised btn-sm btn-block" title="Ver"> <span class="glyphicon glyphicon-eye-open"></span></a>
                         </div>

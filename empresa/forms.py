@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 #from django_select2.forms import Select2Widget
-from .models import Empresa
+from .models import Empresa, UsuariosEmpresa
 from django import forms 
 import re
 
@@ -93,3 +93,8 @@ class EmpresaEditForm(ModelForm):
     #         self.add_error('direccion','Dirección deber ser entre 3 y 50 caracteres')
 
     #     return self.cleaned_data
+
+class VinculacionForm(ModelForm): 
+    class Meta:
+        model = UsuariosEmpresa
+        fields = ('usuario_invitado',)

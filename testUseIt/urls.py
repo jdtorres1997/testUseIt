@@ -18,6 +18,8 @@ from django.urls import path, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import url
+from core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +29,7 @@ urlpatterns = [
     path('empresas_clientes/', include('empresaCliente.urls')),
     path('contactos/', include('contacto.urls')),
     path('oportunidades/', include('oportunidad.urls')),
+    path('core/', include('core.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
