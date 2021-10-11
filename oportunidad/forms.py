@@ -62,6 +62,10 @@ class OportunidadAddForm(ModelForm):
     #     return self.cleaned_data
 
 class OportunidadEditForm(ModelForm):
+    
+    def listarContactos(self, contactos_queryset):
+        self.fields['contacto'].queryset = contactos_queryset
+
     class Meta:
         model = Oportunidad
         fields = ('nombre', 'monto', 'estado', 'contacto')

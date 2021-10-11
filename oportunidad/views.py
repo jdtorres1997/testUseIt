@@ -41,8 +41,9 @@ def add_oportunidad(request):
 
 @login_required
 def editar_oportunidad(request, id_oportunidad):
-	oportunidad = Oportunidad.objects.get(id=id_oportunidad)
 	usuario = request.user
+	oportunidad = Oportunidad.objects.get(id=id_oportunidad)
+	contactos_queryset = Contacto.get_contactos(usuario)
 	if request.method == 'POST':
 		form = OportunidadEditForm(request.POST, instance=oportunidad)
 		if form.is_valid():
@@ -50,10 +51,12 @@ def editar_oportunidad(request, id_oportunidad):
 			messages.success(request, 'Oportunidad registrada exitosamente')
 			return redirect('oportunidades:gestion')
 		else:
+			form.listarContactos(contactos_queryset)
 			messages.error(request, 'Por favor corrige los errores')
 			return render(request, 'oportunidad/edit.html', {'form': form})
 	else:
 		form = OportunidadEditForm(instance=oportunidad)
+		form.listarContactos(contactos_queryset)
 		return render(request, 'oportunidad/edit.html',
 					{'form': form})
 
