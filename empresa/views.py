@@ -5,6 +5,9 @@ from .forms import EmpresaAddForm, EmpresaEditForm, VinculacionForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from empresaCliente.models import EmpresaCliente
+from rest_framework import viewsets
+from rest_framework import permissions
+from .serializers import EmpresaSerializer, UsuariosEmpresaSerializer
 
 # Create your views here.
 @login_required
@@ -112,3 +115,25 @@ def vincular_usuario(request, id_empresa):
 	else:
 		messages.error(request, 'No estas autorizado para realizar esta acción')
 		return redirect('empresa:gestion')
+
+class EmpresaViewSet(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows Empresa to be viewed or edited.
+	"""	
+	serializer_class = EmpresaSerializer
+	permission_classes = [permissions.IsAuthenticated]
+	queryset = Empresa.get_info()
+
+	def get_queryset(self):
+		user = self.request.user
+		queryset = Empresa.get_empresas(user)
+		return queryset
+
+
+class UsuariosEmpresaViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows UsuariosEmpresa to be viewed or edited.
+    """
+    queryset = UsuariosEmpresa.get_info()
+    serializer_class = UsuariosEmpresaSerializer
+    permission_classes = [permissions.IsAuthenticated]

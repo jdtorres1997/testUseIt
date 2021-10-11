@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import ContactoAddForm, ContactoEditForm
 from django.contrib import messages
 from empresaCliente.models import EmpresaCliente
+from rest_framework import viewsets
+from rest_framework import permissions
+from .serializers import ContactoSerializer
 
 # Create your views here.
 @login_required
@@ -76,3 +79,16 @@ def detail_contacto(request, id_contacto):
 	usuario = request.user
 
 	return render(request, 'contacto/detail.html', {'contacto': contacto})
+
+class ContactoViewSet(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows Contacto to be viewed or edited.
+	"""	
+	serializer_class = ContactoSerializer
+	permission_classes = [permissions.IsAuthenticated]
+	queryset = Contacto.get_info()
+
+	def get_queryset(self):
+		user = self.request.user
+		queryset = Contacto.get_contactos(user)
+		return queryset

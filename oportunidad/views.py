@@ -5,6 +5,9 @@ from .forms import OportunidadAddForm, OportunidadEditForm
 from django.contrib import messages
 from empresaCliente.models import EmpresaCliente
 from contacto.models import Contacto
+from rest_framework import viewsets
+from rest_framework import permissions
+from .serializers import OportunidadSerializer
 
 # Create your views here.
 @login_required
@@ -83,3 +86,16 @@ def detail_oportunidad(request, id_oportunidad):
 	usuario = request.user
 
 	return render(request, 'oportunidad/detail.html', {'oportunidad': oportunidad})
+
+class OportunidadViewSet(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows Oportunidad to be viewed or edited.
+	"""	
+	serializer_class = OportunidadSerializer
+	permission_classes = [permissions.IsAuthenticated]
+	queryset = Oportunidad.get_info()
+
+	def get_queryset(self):
+		user = self.request.user
+		queryset = Oportunidad.get_oportunidades(user)
+		return queryset

@@ -6,6 +6,9 @@ from django.contrib import messages
 from contacto.models import Contacto
 from oportunidad.models import Oportunidad
 from empresa.models import Empresa
+from rest_framework import viewsets
+from rest_framework import permissions
+from .serializers import EmpresaClienteSerializer
 
 # Create your views here.
 @login_required
@@ -80,3 +83,16 @@ def detail_empresa(request, id_empresa):
 	contactos = Contacto.get_contactos_empresa_cliente(empresa)
 	oportunidades = Oportunidad.get_oportunidades_empresa_cliente(empresa, usuario)
 	return render(request, 'empresa_cliente/detail.html', {'empresa': empresa, 'contactos': contactos, 'oportunidades':oportunidades})
+
+class EmpresaClienteViewSet(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows EmpresaCliente to be viewed or edited.
+	"""	
+	serializer_class = EmpresaClienteSerializer
+	permission_classes = [permissions.IsAuthenticated]
+	queryset = EmpresaCliente.get_info()
+
+	def get_queryset(self):
+		user = self.request.user
+		queryset = EmpresaCliente.get_empresas_clientes(user)
+		return queryset

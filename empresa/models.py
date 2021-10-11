@@ -35,6 +35,10 @@ class UsuariosEmpresa(models.Model):
     usuario_invitado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuario')
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, verbose_name='Empresa')
 
+    def get_info():
+        usuarios_empresas = UsuariosEmpresa.objects.order_by('id')
+        return usuarios_empresas
+
     def get_usuarios_invitados(empresa):
         try:
             usuarios_empresa = UsuariosEmpresa.objects.filter(empresa=empresa).values_list('usuario_invitado', flat=True).distinct()

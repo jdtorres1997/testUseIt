@@ -20,6 +20,20 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import url
 from core import views as core_views
+from rest_framework import routers
+from empresa import views as empresa_views
+from empresaCliente import views as empresaCliente_views
+from contacto import views as contacto_views
+from oportunidad import views as oportunidad_views
+
+router = routers.DefaultRouter()
+router.register(r'users', core_views.UserViewSet)
+router.register(r'groups', core_views.GroupViewSet)
+router.register(r'empresa', empresa_views.EmpresaViewSet)
+router.register(r'usuario_empresa', empresa_views.UsuariosEmpresaViewSet)
+router.register(r'empresas_clientes', empresaCliente_views.EmpresaClienteViewSet)
+router.register(r'contactos', contacto_views.ContactoViewSet)
+router.register(r'oportunidades', oportunidad_views.OportunidadViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +44,7 @@ urlpatterns = [
     path('contactos/', include('contacto.urls')),
     path('oportunidades/', include('oportunidad.urls')),
     path('core/', include('core.urls')),
+    path('api/', include(router.urls)),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
