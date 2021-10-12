@@ -5,5 +5,5 @@ DBCONFIG['default'] = {
     'NAME': 'testUseIt',
     'USER': 'jdtorres',
     'PASSWORD': 'DeV.2021',
-    'HOST': 'localhost',
+    'HOST': 'db',
 }
