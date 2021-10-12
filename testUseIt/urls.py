@@ -25,6 +25,7 @@ from empresa import views as empresa_views
 from empresaCliente import views as empresaCliente_views
 from contacto import views as contacto_views
 from oportunidad import views as oportunidad_views
+from django.views.generic import RedirectView
 
 router = routers.DefaultRouter()
 router.register(r'users', core_views.UserViewSet)
@@ -36,6 +37,7 @@ router.register(r'contactos', contacto_views.ContactoViewSet)
 router.register(r'oportunidades', oportunidad_views.OportunidadViewSet)
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/empresas/', permanent=False)),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api-auth/', include('rest_framework.urls')),
